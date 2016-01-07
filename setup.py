@@ -1,11 +1,11 @@
 from distutils.core import setup
 
 setup(
-    name = 'ldrtransfer',
+    name = 'uchicagoldrtransfer',
     version = '1.0.0',
     author = "Tyler Danstrom,Fred Seaton,Keith Waclena",
     author_email = "tdanstrom@uchicago.edu,Fred Seaton,Keith Waclena",
-    packages = ['ldrtransfer'],
+    packages = ['uchicagoldrtransferring'],
     description = """\
     A command line module for ldr accessioners to transfer a new directory into
     the repository and transfer all ownership of resulting 
@@ -19,6 +19,5 @@ setup(
         "Operating System :: Unix",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-    long_description = open('README.txt').read(),
-    install_requires = ['SQLAlchemy >= 1.0.8'])
+    install_requires = [])
                         
