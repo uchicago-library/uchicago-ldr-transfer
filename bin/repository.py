@@ -37,8 +37,8 @@ def main():
                              description = "This is a tool for moving " + \
                              "accessions out of staging and into the archive.",
                              epilog = "Copyright University of Chicago" + \
-                             " written by Tyler Danstrom
-<tdanstrom@uchicago.edu>"
+                             " written by Tyler Danstrom " + \
+"<tdanstrom@uchicago.edu>")
 
     parser.add_argument( \
                          "archive_directory",help="Enter the location of " + \
@@ -47,7 +47,7 @@ def main():
     parser.add_argument( \
                          "source_root",help="Enter the root of the source " + \
                          "directory: that is the part of the path before " + \
-                         "directory you wanto accession",
+                         "directory you want to accession",
                          action=ValidateDirectory \
     )
     parser.add_argument( \
