@@ -6,7 +6,7 @@ from pwd import getpwnam
 from shutil import move
 from uchicagoldr.item import Item
 
-class MoveableItem(AccesionItem):
+class MoveableItem(Item):
     destination = None
     root_path = None
     destination_root = None
@@ -37,6 +37,8 @@ class MoveableItem(AccesionItem):
         shutil.copyfile(self.filepath, self.destination)
         if exists(self.destination):
             new = Item(self.destination)
+            self.destination_ownership(self.owner)
+            self.destination(self.group)
             if new.find_sha256() == self.get_sha256():
                 return namedtuple("result","status message") \
                     ("Good","")
