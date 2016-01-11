@@ -6,38 +6,52 @@ from uchicagoldrconfig.LDRConfiguration import LDRConfiguration
 
 config = LDRConfiguration('/media/sf_source_code/ldr_configuration/config/').get_config()
 
-        
-class MoveableDirectory(Directory):
-    def __init__(self, directory_path, source_root, destination_root, 
-                 items=None):
-        self.directory_path = directory_path
-
-    def add_item(self, i):
-        assert isinstance(i, Item)
-        self.items.add(i)
-
-class StagingDirectory(MoveableDirectory):
-    def __init__(self, directory_path, source_root, destination_root, 
-                 ead_identifier, accession_number, embargo=False, items=None):
-        assert exists(directory_path)
+class Staging(object):
+    def __init__(self, moveable_thing, accnum, ead_id):
+        assert isinstance(moveable_thing, MoveableItems)
         assert re_compile('^\d{4}[-]\d{3}$').match(accession_number)
         assert re_compile('^ICU.(.*)$').match(ead_identifier)
-        self.ead_identifier = ead_identifier
-        self.accession_number = accession_number
-        self.accession_noid = self.mint_accession_identifier()
-        if embargo:
-            self.user = "embargo"
-            self.group = "embargo"
-        else:
-            self.user = "repository"
-            self.group = "repository"
-        self.directory_path = directory_path
-        self.items = self.walk_directory_picking_files(directory_path)
+        self.accession_number = accnum
+        self.ead_identifier = ead_id
+        self.contents = moveable_thing
+
+class Accession(object):
+    def __init__(self):
+        pass
+
+class MoveableItems(Directory):
+    def __init__(self):
+        self.items = []
+
+    def add_item(self, i):
+        assert isinstance(i, MoveableItem)
+        if not [x for x in self.items if x.filepath==i.filepath]:
+            self.items.append(i)
+            return True
+        return False
+            
+# class StagingDirectory(MoveableDirectory):
+#     def __init__(self, directory_path, source_root, destination_root, 
+#                  ead_identifier, accession_number, embargo=False, items=None):
+#         assert exists(directory_path)
+#         assert re_compile('^\d{4}[-]\d{3}$').match(accession_number)
+#         assert re_compile('^ICU.(.*)$').match(ead_identifier)
+#         self.ead_identifier = ead_identifier
+#         self.accession_number = accession_number
+#         self.accession_noid = self.mint_accession_identifier()
+#         if embargo:
+#             self.user = "embargo"
+#             self.group = "embargo"
+#         else:
+#             self.user = "repository"
+#             self.group = "repository"
+#         self.directory_path = directory_path
+#         self.items = self.walk_directory_picking_files(directory_path)
 
 
-    def ingest():
-        for n in self.items:
-            i.copy_into_new_location()
+#     def ingest():
+#         for n in self.items:
+#             i.copy_into_new_location()
 
 class AccessionIdentifier(object):
     def __init__(self):
@@ -75,12 +89,15 @@ class FileWalker(object):
 
 if __name__ == "__main__":
     f = FileWalker('/media/sf_source_code/uchicagoldr-transfer/source_root')
-    ai = AccessionIdentifier()
-    sd = StagingDirectory()
+    #ai = AccessionIdentifier()
+
+    mitems = MoveableItems()
     for i in f:
         mi = MoveableItem(i,'/media/sf_source_code/uchicagoldr-transfer/source_root',
                           '/media/sf_source_code/uchicagoldr-transfer/destination')
-        print((mi.filepath, mi.destination))
+        mitems.add_item(mi)
+    print(mitems.items)
+
 # class Batch(object):
 #     items = []
 #     directory = ""
