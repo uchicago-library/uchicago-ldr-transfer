@@ -34,18 +34,24 @@ class StagingDirectory(MoveableDirectory):
         self.directory_path = directory_path
         self.items = self.walk_directory_picking_files(directory_path)
 
+
+    def ingest():
+        for n in self.items:
+            i.copy_into_new_location()
+
+class AccessionIdentifier(object):
+    def __init__(self):
+        self.identifier = self.mint_accession_identifier()
+
     def mint_accession_identifier(self):
-        url_data = config['accessionminter']['url']
+        from urllib import request
+        url_data = request.urlopen(config['accessionminter']['url'])
         if url_data.status == 200:
             url_data = url_data.read()
         else:
             raise ValueError("Could not fetch batch identifier from " +
                              "RESTful NOID minter")
         return url_data.split('61001/').rstrip()
-
-    def ingest():
-        for n in self.items:
-            i.copy_into_new_location()
 
 
 class FileWalker(object):
@@ -69,6 +75,8 @@ class FileWalker(object):
 
 if __name__ == "__main__":
     f = FileWalker('/media/sf_source_code/uchicagoldr-transfer/source_root')
+    ai = AccessionIdentifier()
+    sd = StagingDirectory()
     for i in f:
         mi = MoveableItem(i,'/media/sf_source_code/uchicagoldr-transfer/source_root',
                           '/media/sf_source_code/uchicagoldr-transfer/destination')
