@@ -13,17 +13,18 @@ class MoveableItem(Item):
     destination_permissions = 0o740
 
     def __init__(self, filepath, source_root, destination_root):
-        assert exists(abspath(file_path))
+        assert exists(abspath(filepath))
         assert exists(abspath(destination_root))
         assert exists(abspath(source_root))
         self.root_path = source_root
         self.destination_root = destination_root
         self.filepath = filepath
+        self.can_read = access(filepath, R_OK)
         self.set_sha256(self.find_sha256_hash())
         self.destination = self.calculate_destination_location()
     
-    def calculate_destination_location(self)
-        path_sans_root = relpath(self.file_path, self.root_path)
+    def calculate_destination_location(self):
+        path_sans_root = relpath(self.filepath, self.root_path)
         destination_full_path = join(self.destination_root, path_sans_root)
         return destination_full_path
         

@@ -2,12 +2,21 @@ from os import access, listdir, rmdir, R_OK
 from os.path import join, isfile, isdir, relpath
 from uchicagoldr.batch import Directory
 from uchicagoldrtransferring.moveableitem import MoveableItem
-from uchicagoldrconfig.LDRCofiguration import LDRConfiguration
+from uchicagoldrconfig.LDRConfiguration import LDRConfiguration
 
-config = LDRConfiguration('/home/tdanstrom/src/ldr_projects/uchicagoldr-config/').get_config()
+config = LDRConfiguration('/media/sf_source_code/ldr_configuration/config/').get_config()
+
+        
+class MoveableDirectory(Directory):
+    def __init__(self, directory_path, source_root, destination_root, 
+                 items=None):
+        self.directory_path = directory_path
+
+    def add_item(self, i):
+        assert isinstance(i, Item)
+        self.items.add(i)
 
 class StagingDirectory(MoveableDirectory):
-
     def __init__(self, directory_path, source_root, destination_root, 
                  ead_identifier, accession_number, embargo=False, items=None):
         assert exists(directory_path)
@@ -33,32 +42,37 @@ class StagingDirectory(MoveableDirectory):
             raise ValueError("Could not fetch batch identifier from " +
                              "RESTful NOID minter")
         return url_data.split('61001/').rstrip()
-        
 
     def ingest():
         for n in self.items:
             i.copy_into_new_location()
-        
-class MoveableDirectory(Directory):
 
-    def __init__(self, directory_path, source_root, destination_root, 
-                 items=None):
+
+class FileWalker(object):
+    def __init__(self, directory_path):
         self.directory_path = directory_path
-        self.items = self.walk_directory_picking_files(source_root, 
-                                                       destination_root)
+        self.files = self.walk_directory_picking_files()
+
+    def __iter__(self):
+        return self.files
 
     def walk_directory_picking_files(self):
-        flat_list = listdir(self.get_directory_path())
+        flat_list = listdir(self.directory_path)
         while flat_list:
             node = flat_list.pop()
-            fullpath = join(self.get_directory_path(), node)
+            fullpath = join(self.directory_path, node)
             if isfile(fullpath):
-                i = MoveableItem(fullpath, source_root, destination_root)
-                yield i
+                yield fullpath
             elif isdir(fullpath):
                 for child in listdir(fullpath):
                     flat_list.append(join(fullpath, child))
 
+if __name__ == "__main__":
+    f = FileWalker('/media/sf_source_code/uchicagoldr-transfer/source_root')
+    for i in f:
+        mi = MoveableItem(i,'/media/sf_source_code/uchicagoldr-transfer/source_root',
+                          '/media/sf_source_code/uchicagoldr-transfer/destination')
+        print((mi.filepath, mi.destination))
 # class Batch(object):
 #     items = []
 #     directory = ""
