@@ -2,7 +2,7 @@
 from os import access, listdir, rmdir, R_OK
 from os.path import join, isfile, isdir, relpath
 
-from libs.item import Item
+from ldrtransfer.item import Item
 
 class Batch(object):
     items = []

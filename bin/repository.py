@@ -23,8 +23,8 @@ from logging import DEBUG, ERROR, FileHandler, Formatter, getLogger, INFO, \
     StreamHandler
 from sqlalchemy import Table
 
-from libs.batch import Batch
-from libs.database import Database
+from ldrtransfer.batch import Batch
+from ldrtransfer.database import Database
 
 class ValidateDirectory(Action):
     def __call__(self, parser, args, value, option_string=None):

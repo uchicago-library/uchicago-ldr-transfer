@@ -5,7 +5,7 @@ setup(
     version = '1.0.0',
     author = "Tyler Danstrom,Fred Seaton,Keith Waclena",
     author_email = "tdanstrom@uchicago.edu,Fred Seaton,Keith Waclena",
-    packages = ['uchicagoldrtransferring'],
+    packages = ['ldrtransfer'],
     description = """\
     A command line module for ldr accessioners to transfer a new directory into
     the repository and transfer all ownership of resulting 
